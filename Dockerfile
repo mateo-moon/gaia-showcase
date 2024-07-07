@@ -22,13 +22,14 @@ WORKDIR /src/app/gaia
 RUN go mod download
 RUN CGO_ENABLED=0 make install
 
-#This is the part of official gaia Dockerfile https://github.com/cosmos/gaia/blob/main/Dockerfile
 FROM alpine:3.19.2
 
+# Add environment variables that we need to configure the node
 ENV MONIKER=dazzling_shtern \
     CHAIN_ID=cosmoshub-4 \
     GENESIS_URL=https://raw.githubusercontent.com/cosmos/launch/master/genesis.json
 
+# Update apk and install required packages
 RUN apk update && apk add --no-cache \
     build-base \
     curl \
@@ -36,15 +37,19 @@ RUN apk update && apk add --no-cache \
     lz4 \
     aria2
     
+# Add a non-root user to run the node
 RUN adduser -D nonroot
 COPY --from=gaiad-builder  /go/bin/gaiad /usr/local/bin/
+
+# Copy the entrypoint script which check args and runs init_pruned script if "pruned start" arguments are passed
 COPY entrypoint.sh /usr/local/bin/
 COPY init_pruned.sh /usr/local/bin/
 RUN chmod +x \ 
     /usr/local/bin/entrypoint.sh \
     /usr/local/bin/init_pruned.sh
-USER nonroot
 
+# Switch to non-root user
+USER nonroot
 EXPOSE 26656
 WORKDIR /home/nonroot
 

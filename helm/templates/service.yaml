@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "metrics"
+    prometheus.io/scrape: "true"
+  name: gaid
+  labels:
+    app: gaid
+spec:
+  type: NodePort
+  ports:
+  - port: 26656 
+    targetPort: 26656
+    nodePort: 30007
+  - port: 26660
+    targetPort: 26660
+    nodePort: 9090
+  selector:
+    app: gaid

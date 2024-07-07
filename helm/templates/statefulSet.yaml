@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gaid-statefulset
+  labels:
+    app: gaid
+spec:
+  serviceName: gaid
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: gaid
+  template:
+    metadata:
+      labels:
+        app: gaid
+    spec:
+      containers:
+      - name: gaid
+        image: {{ .Values.image }}
+        command: ["{{ .Values.cmd }}"]
+        ports:
+        - containerPort: 26656
+        - containerPort: 26660
+        volumeMounts:
+        - name: config
+          mountPath: {{ .Values.configPath }}
+        resources:
+          {{ toYaml .Values.resources | nindent 10 }}
+      volumes:
+      - name: config
+        configMap:
+          name: gaiad-config
+          items:
+          - key: config.yaml
+            path: config.yaml
+          - key: client.yaml
+            path: client.yaml
+          - key: app.yaml
+            path: app.yaml
+  volumeClaimTemplates:
+    - metadata:
+        name: gaiad-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "hostpath"
+        resources:
+          requests:
+            storage: 10Gi
