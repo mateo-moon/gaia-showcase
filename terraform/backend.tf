@@ -16,11 +16,11 @@ resource "aws_s3_bucket" "state" {
   bucket = "tf-state-xvjqwblrsf"
 }
 
-# You have to comment it out if you want to create S3 bucket at first
-terraform {
-  backend "s3" {
-    bucket = "tf-state-xvjqwblrsf"
-    key    = "terraform.tfstate"
-    region = "eu-central-1"
-  }
-}
+# You have to comment next resource out if you want to use the remote backend
+# terraform {
+#   backend "s3" {
+#     bucket = "tf-state-xvjqwblrsf"
+#     key    = "terraform.tfstate"
+#     region = "eu-central-1"
+#   }
+# }

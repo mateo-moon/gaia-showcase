@@ -19,7 +19,7 @@ PERSISTENT_PEERS=${PERSISTENT_PEERS:-$(curl -s https://raw.githubusercontent.com
 sed -i'' "s/persistent_peers = \"\"/persistent_peers = \"${PERSISTENT_PEERS:-}\"/" $HOME/.gaia/config/config.toml
 
 #Download pruned state
-URL=`curl -L https://quicksync.io/cosmos.json|jq -r '.[] |select(.file=="cosmoshub-4-pruned")|.url'`
+URL=`curl -L https://quicksync.io/cosmos.json | jq -r '.[] |select(.file=="cosmoshub-4-pruned")|.url'`
 cd $HOME/.gaia
 aria2c -x5 $URL
 lz4 -c -d --rm `basename $URL` | tar xf -

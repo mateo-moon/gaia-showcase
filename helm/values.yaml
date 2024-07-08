@@ -4,7 +4,8 @@
 
 replicaCount: 1
 image: "oplakida/gaia:v17.2.0"
-cmd: "start"
+# This will trigger `init_pruned.sh` script: init new node and start quicksync
+cmd: "pruned start"
 resources:
   limits:
     memory: 4Gi

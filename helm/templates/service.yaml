@@ -12,9 +12,6 @@ spec:
   ports:
   - port: 26656 
     targetPort: 26656
-    nodePort: 30007
-  - port: 26660
-    targetPort: 26660
-    nodePort: 9090
+    nodePort: 26656
   selector:
     app: gaid
